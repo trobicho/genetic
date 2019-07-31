@@ -1,0 +1,7 @@
+GeneticReal.o: GeneticReal.cpp GeneticReal.h People.h AbsPeople.h \
+ Fitness.h random.h AbsGenetic.h SortInvert.h Sort.h
+AbsGenetic.o: AbsGenetic.cpp AbsGenetic.h random.h SortInvert.h Sort.h \
+ AbsPeople.h
+People.o: People.cpp People.h AbsPeople.h Fitness.h random.h
+PeoplePool.o: PeoplePool.cpp PeoplePool.h AbsPeople.h Fitness.h random.h
+random.o: random.cpp random.h
