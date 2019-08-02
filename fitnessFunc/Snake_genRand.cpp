@@ -1,8 +1,8 @@
 #include "Snake_genRand.h"
 
-Snake_genRand::Snake_genRand(s_vec2i max): Snake_new(max, false, 7, 3)
+Snake_genRand::Snake_genRand(s_vec2i max): Snake_new(max, false, 3, 3)
 {
-    m_activFoodGen=0;
+    m_activFoodGen=1;
     m_appleVec.resize(1000);
 }
 
@@ -10,10 +10,13 @@ int Snake_genRand::evaluate(std::vector<double> &gene, int generation)
 {
     if(m_activFoodGen>=0 && generation>=m_activFoodGen)
         set_food(true);
-    if(m_bFood && (m_genLast<generation || !m_genLast))
+    if(m_bFood && (m_genLast < generation || !m_genLast))
     {
-        randAppleVec();
-        m_genLast=generation;
+		if (generation - m_genLast > 10)
+		{
+			randAppleVec();
+			m_genLast=generation;
+		}
     }
     evaluate(gene);
 }
@@ -85,7 +88,7 @@ void Snake_genRand::step()
         m_bEat=false;
         m_score+=m_applePoint-m_moveNoEat/10;
         m_moveNoEat=0;
-        add_len();
+        add_len(5);
         nextApple();
     }
     else if(m_moveNoEat>(m_starving+m_snake.len))

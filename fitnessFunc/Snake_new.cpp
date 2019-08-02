@@ -1,26 +1,30 @@
 #include "Snake_new.h"
 #include <iostream>
 
-Snake_new::Snake_new(s_vec2i max, bool binaryNet, int nbSensor, int nbOutPerDir): m_max(max), m_binaryNet(binaryNet),\
-m_nbOutPerDir(nbOutPerDir), NeuralNet_wrapper(nbSensor*nbOutPerDir)
+Snake_new::Snake_new(s_vec2i max, bool binaryNet, int nb_direction, int nbOutPerDir):
+	m_nb_direction(nb_direction), m_max(max), m_binaryNet(binaryNet), m_nbOutPerDir(nbOutPerDir)
+	, NeuralNet_wrapper(nb_direction * nbOutPerDir + m_extra_sensor)
 {
     if(m_binaryNet)
         addLayerFront(Layer(1));
     else
         addLayerFront(Layer(3));
-    addLayerFront(Layer(14));
+	addLayerFront(Layer(9));
     m_nbWeight=0;
     NeuralNet::init();
     std::list<Layer>::iterator it=m_layer.begin();
     for(; it!=m_layer.end(); it++)
     {
-        m_nbWeight+=it->get_nbNeuronWeight()*it->get_nbNeuron();
-        it->set_kFactor(10);
+        m_nbWeight += it->get_nbNeuronWeight() * it->get_nbNeuron();
+        it->set_kFactor(5.0);
+        it->set_bias(20);
     }
+	it--;
+	it->set_kFactor(20.0);
     //m_scoreTab.resize(m_nbEvaluate);
-    m_sensor.resize(nbSensor*nbOutPerDir);
+    m_sensor.resize(m_nb_direction * nbOutPerDir + m_extra_sensor);
     snake_init();
-    m_viewTab.resize(m_max.x*m_max.y);
+    m_viewTab.resize(m_max.x * m_max.y);
 }
 
 void Snake_new::snake_init()
@@ -36,47 +40,72 @@ void Snake_new::snake_init()
     m_nbMove=0;
 }
 
+int		Snake_new::item_dist(int dir, int id, int maxD)
+{
+	auto	p = m_snake.head;
+	int		dx = 0;
+	int		dy = 0;
+	int		d;
+
+	if (dir % 2 == 0)
+		dx = dir-1;
+	else
+		dy = dir-2;
+	p.x += dx;
+	p.y += dy;
+	for(d=0; d<maxD - 1; d++)
+	{
+		if (m_viewTab[p.x + p.y * m_max.x] == id)
+			return (d);
+		p.x += dx;
+		p.y += dy;
+	}
+	return (-1);
+}
+
 void Snake_new::sensorUpdate()
 {
     int head=m_snake.head.y*m_max.x+m_snake.head.x, d;
     int maxD;
-    for(int i=0; i<3; i++)
+    for(int i=0; i<m_nbOutPerDir; i++)
     {
         int dir=((!m_snake.dir?3:m_snake.dir-1)+i)%4;
         if(dir<2)
             maxD=(dir%2)?m_snake.head.y:m_snake.head.x;
         else
             maxD=((dir%2)?m_max.y-m_snake.head.y:m_max.x-m_snake.head.x)-1;
-        d=0;
         int t=head;
         m_sensor[i]=maxD;
         for(int a=0; a<2; a++)
         {
             if(a==1 && !m_bFood)
-                m_sensor[6+i]=0;
+                m_sensor[6+i]=-10;
             else
             {
-                int t=head;
-                for(; d<maxD && m_viewTab[t]!=a+1; d++)
-                {
-                    t+=dir%2?(dir-2)*m_max.x:dir-1;
-                }
-                if(m_viewTab[t]==a+1)
-                    m_sensor[3+a*3+i]=d;
+                if((d = item_dist(dir, a + 1, maxD)) >= 0)
+				{
+                    m_sensor[3+a*3+i] = d;
+				}
                 else
-                    m_sensor[3+a*3+i]=0;
+                    m_sensor[3+a*3+i] = -10;
             }
         }
     }
+	if (m_extra_sensor)
+	{
+		m_sensor[m_nbOutPerDir * m_nb_direction] = (m_starving + m_snake.len) - m_moveNoEat;
+		if (m_extra_sensor > 1)
+			m_sensor[m_nbOutPerDir * m_nb_direction + 1] = m_snake.len;
+	}
 }
 
 void Snake_new::sensorDbg()
 {
-    int halfS=m_sensor.size()/2;
+    int halfS=m_sensor.size()/m_nbOutPerDir;
     for(int i=0; i<halfS; i++)
     {
-        if(m_sensor[i+halfS]>1)
-            std::cout << "dir (" << i << ") dist: " << m_sensor[i] << " type [" << m_sensor[i+halfS] << "]" << std::endl;
+            std::cout << "dir (" << i << ") dist: " << m_sensor[i + halfS] << " type [" << m_sensor[i+halfS*2] << "]"
+				<< " len(" << m_sensor[m_nbOutPerDir * m_nb_direction]<< ")" << std::endl;
     }
 }
 
@@ -139,7 +168,7 @@ void Snake_new::step()
     move();
     if(!m_bFood)
     {
-        if(m_score%10==0)
+        if(m_score%5==0)
             add_len(1);
     }
     else if(m_bEat)
@@ -147,7 +176,7 @@ void Snake_new::step()
         m_bEat=false;
         m_score+=m_applePoint+(m_snake.len-m_basicLen)*((m_starving+m_snake.len)-m_moveNoEat);
         m_moveNoEat=0;
-        add_len(5);
+        add_len(15);
         randApple();
     }
     else if(m_moveNoEat>(m_starving+m_snake.len))

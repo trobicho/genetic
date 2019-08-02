@@ -10,7 +10,7 @@ TankPeople::TankPeople(): PeoplePool(), NeuralNet(4)
     for(; it!=m_layer.end(); it++)
     {
         m_nbWeight+=it->get_nbNeuronWeight()*it->get_nbNeuron();
-        it->set_kFactor(100);
+        it->set_kFactor(1);
     }
     set_nbGene(m_nbWeight);
     init();

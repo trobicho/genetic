@@ -49,9 +49,9 @@ GeneticPool<T>::GeneticPool(int nbPeople, int peopleLen):AbsGenetic(nbPeople), m
     m_parent.resize(2);
     m_sort=new SortInvert();
     //for(int i=0; i<m_nbPeople; i++){m_people[i]->randGenome();}
-    m_nbCrossing=m_nbStablePeople/2;
-    m_nbMutate=m_nbStablePeople/2;
-    m_mutateProb=10;
+    m_nbCrossing=m_nbStablePeople / 4;
+    //m_nbMutate=m_nbStablePeople/2;
+    m_mutateProb=20;
 }
 
 template <class T>
