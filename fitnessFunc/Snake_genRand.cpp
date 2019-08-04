@@ -2,7 +2,7 @@
 
 Snake_genRand::Snake_genRand(s_vec2i max): Snake_new(max, false, 3, 3)
 {
-    m_activFoodGen=1;
+    m_activFoodGen=0;
     m_appleVec.resize(1000);
 }
 
@@ -12,7 +12,7 @@ int Snake_genRand::evaluate(std::vector<double> &gene, int generation)
         set_food(true);
     if(m_bFood && (m_genLast < generation || !m_genLast))
     {
-		if (generation - m_genLast > 10)
+		if (generation - m_genLast > 0)
 		{
 			randAppleVec();
 			m_genLast=generation;

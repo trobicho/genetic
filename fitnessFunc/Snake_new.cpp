@@ -16,11 +16,11 @@ Snake_new::Snake_new(s_vec2i max, bool binaryNet, int nb_direction, int nbOutPer
     for(; it!=m_layer.end(); it++)
     {
         m_nbWeight += it->get_nbNeuronWeight() * it->get_nbNeuron();
-        it->set_kFactor(5.0);
-        it->set_bias(20);
+        it->set_kFactor(15.0);
+        it->set_bias(0);
     }
 	it--;
-	it->set_kFactor(20.0);
+	it->set_kFactor(100.0);
     //m_scoreTab.resize(m_nbEvaluate);
     m_sensor.resize(m_nb_direction * nbOutPerDir + m_extra_sensor);
     snake_init();
@@ -84,10 +84,15 @@ void Snake_new::sensorUpdate()
             {
                 if((d = item_dist(dir, a + 1, maxD)) >= 0)
 				{
-                    m_sensor[3+a*3+i] = d;
+					m_sensor[3+a*3+i] = d + 1;
 				}
                 else
-                    m_sensor[3+a*3+i] = -10;
+				{
+					if (a == 0)
+						m_sensor[3+a*3+i] = maxD;
+					else
+						m_sensor[3+a*3+i] = -10;
+				}
             }
         }
     }

@@ -6,7 +6,7 @@
 /*   By: trobicho <trobicho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/03 00:18:05 by trobicho          #+#    #+#             */
-/*   Updated: 2019/08/04 00:40:10 by trobicho         ###   ########.fr       */
+/*   Updated: 2019/08/04 21:58:26 by trobicho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Neat::Neat(Fitness *fitness, int nb_people, int nb_in, int nb_out):AbsGenetic(nb
     for(int i=0; i<m_nbPeople; i++){m_people[i]->randGenome();}
     //m_sort=(fitness->get_sortInvert()?new SortInvert():new Sort());
     m_nbCrossing=m_nbStablePeople / 8;
-    m_nbMutate=m_nbStablePeople / 8;
+	m_mutate_prob = 0.6;
 }
 
 Neat::~Neat()
@@ -39,7 +39,6 @@ void Neat::nextGen(void)
     m_sort->sort(m_people, m_nbPeople);
     
     m_generation++;
-    for(int i=0; i<m_nbCrossing && crossing()!=-1; i++){;}
     m_sort->sort(m_people, m_nbPeople);
     for(int i=0; i<m_nbMutate && mutate()!=-1; i++){;}
     m_sort->sort(m_people, m_nbPeople);
@@ -49,6 +48,7 @@ void Neat::nextGen(void)
 
 int Neat::crossing(void)
 {
+	/*
     parentSelect();
     if(m_nbPeople+3>=m_people.size())
         return -1;
@@ -80,12 +80,13 @@ int Neat::crossing(void)
     }
     m_nbPeople+=2;
     return 0;
+	*/
 }
 
 int Neat::mutate(void)
 {
     int p=wheel_sigma();
-    if(m_nbPeople+1>=m_people.size())
+    if (m_nbPeople+1>=m_people.size())
         return -1;
     m_people[p]->mutate();
     m_people[m_nbPeople]->copyGenome(m_people[p]);

@@ -50,12 +50,12 @@ class Snake_new: public NeuralNet_wrapper
 
         s_snake m_snake;
         s_vec2i m_max, m_apple;
-        int m_basicLen=100;
+        int m_basicLen=10;
         bool m_dead, m_bFood=false, m_bEat=false;
         int m_score;
         int m_applePoint=100;
         int m_nbWeight;
-        int m_activFoodGen=25;
+        int m_activFoodGen=10;
         int m_moveNoEat=0;
         int m_nbEvaluate=1;
         bool m_binaryNet;
@@ -63,7 +63,7 @@ class Snake_new: public NeuralNet_wrapper
         int m_nbOutPerDir;
         int m_nbMove;
 		int	m_debug = true;
-		int	m_extra_sensor = 1;
+		int	m_extra_sensor = 2;
 		int	m_nb_direction = 3;
         std::vector<int> m_sensor;
         std::vector<int> m_viewTab;

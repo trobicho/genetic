@@ -12,7 +12,7 @@ GeneticReal::GeneticReal(Fitness *fitness, int nbPeople, int peopleLen):AbsGenet
     for(int i=0; i<m_nbPeople; i++){m_people[i]->randGenome();}
     //m_sort=(fitness->get_sortInvert()?new SortInvert():new Sort());
     m_nbCrossing=m_nbStablePeople / 8;
-    m_nbMutate=m_nbStablePeople / 8;
+    m_nbMutate=m_nbStablePeople / 1.5;
 }
 
 GeneticReal::~GeneticReal()
@@ -33,7 +33,7 @@ void GeneticReal::nextGen(void)
     for(int i=0; i<m_nbCrossing && crossing()!=-1; i++){;}
     m_sort->sort(m_people, m_nbPeople);
     for(int i=0; i<m_nbMutate && mutate()!=-1; i++){;}
-    m_sort->sort(m_people, m_nbPeople);
+    //m_sort->sort(m_people, m_nbPeople);
     elitistSort();
     m_nbPeople=m_nbStablePeople;
 }
@@ -79,9 +79,9 @@ int GeneticReal::mutate(void)
     if(m_nbPeople+1>=m_people.size())
         return -1;
     m_people[p]->mutate();
-    m_people[m_nbPeople]->copyGenome(m_people[p]);
-    m_people[m_nbPeople]->set_generation(m_generation);
-    m_people[m_nbPeople]->mutate();
+    //m_people[m_nbPeople]->copyGenome(m_people[p]);
+    m_people[p]->set_generation(m_generation);
+    m_people[p]->mutate();
     //m_people[m_nbPeople]->evaluate();
     m_nbPeople++;
     return 0;

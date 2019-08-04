@@ -6,7 +6,7 @@
 /*   By: trobicho <trobicho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/03 00:26:11 by trobicho          #+#    #+#             */
-/*   Updated: 2019/08/04 13:59:12 by trobicho         ###   ########.fr       */
+/*   Updated: 2019/08/04 20:08:17 by trobicho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ class	Neat_genome
 	public:
 		Neat_genome(int nb_input, int nb_output);
         
+		void	mutate_add_node(void);
+		void	mutate_add_connection(void){};
 		template <typename T>
         vector<double>&	calc(const std::vector<T> &entrie)
         {
@@ -45,7 +47,7 @@ class	Neat_genome
             {
 				if (m_node_gene[i].layer == 0)
 				{
-					m_node_gene[n].out = (double)entrie[n];
+					m_node_gene[n].in = (double)entrie[n];
 					m_node_gene[n].calc_finish = true;
 				}
 				else
@@ -84,7 +86,6 @@ class	Neat_genome
 				if (m_node_gene[n].layer == 2)
 					m_result[r++] = m_node_gene[n].in;
 			}
-            return m_result;
         }
 
 	private:
