@@ -23,5 +23,6 @@ class AbsGenetic
         int			m_nbPeople;
         int			m_maxGen=100;
         int 		m_mutateDegre=2;
+        int			m_nbStablePeople;
         SortInvert	*m_sort;
 };

@@ -27,7 +27,8 @@ void People::mutate(void)//non universelle
     m_gene[a]=m_gene[b];
     m_gene[b]=temp;
     */
-    int temp, a=randMinMax(0, m_nbGene-1);
-    m_gene[a]+=randMinMax(-5000, 5000)/10000.0;
+    int temp, a;
+	a = randMinMax(0, m_nbGene-1);
+    m_gene[a]+=randMinMax(-5000, 5000)/30000.0;
     //std::cout << randMinMax(-5000, 5000)/10000.0 << std::endl;
 }

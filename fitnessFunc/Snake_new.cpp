@@ -9,10 +9,14 @@ Snake_new::Snake_new(s_vec2i max, bool binaryNet, int nb_direction, int nbOutPer
         addLayerFront(Layer(1));
     else
         addLayerFront(Layer(3));
-	addLayerFront(Layer(9));
+	addLayerFront(Layer(5));
     m_nbWeight=0;
     NeuralNet::init();
     std::list<Layer>::iterator it=m_layer.begin();
+	it->set_kFactor(60.0);
+	it->set_bias(30);
+	m_nbWeight += it->get_nbNeuronWeight() * it->get_nbNeuron();
+	it++;
     for(; it!=m_layer.end(); it++)
     {
         m_nbWeight += it->get_nbNeuronWeight() * it->get_nbNeuron();
@@ -20,7 +24,6 @@ Snake_new::Snake_new(s_vec2i max, bool binaryNet, int nb_direction, int nbOutPer
         it->set_bias(0);
     }
 	it--;
-	it->set_kFactor(100.0);
     //m_scoreTab.resize(m_nbEvaluate);
     m_sensor.resize(m_nb_direction * nbOutPerDir + m_extra_sensor);
     snake_init();
@@ -119,6 +122,7 @@ int Snake_new::evaluate(std::vector<double> &gene, int generation)
     if(m_activFoodGen>=0 && generation>=m_activFoodGen)
         set_food(true);
     evaluate(gene);
+	return (m_score);
 }
 
 int Snake_new::evaluate(std::vector<double> &gene)
@@ -195,7 +199,7 @@ void Snake_new::randGenome(std::vector<double> &gene)
 {
     for(int i=0; i<m_nbWeight; i++)
     {
-        gene[i]=randMinMax(-5000, 5000)/10000.0;
+        gene[i]=randMinMax(-5000, 5000)/20000.0;
     }
 }
 

@@ -1,14 +1,14 @@
 MKDEP=$(CXX) -MM
 
-SRCS=GeneticReal.cpp GeneticPool.cpp AbsGenetic.cpp People.cpp PeoplePool.cpp random.cpp $(SRCS_FITNESS)
+SRCS=GeneticReal.cpp AbsGenetic.cpp People.cpp PeoplePool.cpp random.cpp $(SRCS_FITNESS)
 HDRS=GeneticReal.h GeneticPool.h AbsGenetic.h People.h PeoplePool.h AbsPeople.h Fitness.h SortInvert.h Sort.h random.h $(HDRS_FITNESS)
 OUTS = $(SRCS:.cpp=.o)
-CFLAGS=-c
+CFLAGS=-c -std=c++11
 
 genetic: $(OUTS)
-	ar rcs libgenetic.a $(OUTS)
+	ar sucr libgenetic.a $(OUTS)
 
-%.o : %.c
+%.o : %.cpp
 	$(CC) $(CFLAGS) -c $^
 
 clean:

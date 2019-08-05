@@ -19,9 +19,6 @@ class People: public AbsPeople<double>
         void randGenome(){m_fitness->randGenome(m_gene);}
         //void crossing(People **parent, int nbParents);
         void mutate();//non universelle
-        std::vector<T>& get_gene(){return m_gene;}
-        void set_nbGene(int n){m_gene.resize((m_nbGene=n));}
-        int get_nbGene(){return m_nbGene;}
 
     private:
         Fitness *m_fitness;

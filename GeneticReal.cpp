@@ -1,8 +1,9 @@
 #include "GeneticReal.h"
 #include <iostream>
 
-GeneticReal::GeneticReal(Fitness *fitness, int nbPeople, int peopleLen):AbsGenetic(nbPeople), m_fitness(fitness), m_nbStablePeople(nbPeople)
+GeneticReal::GeneticReal(Fitness *fitness, int nbPeople, int peopleLen):AbsGenetic(nbPeople), m_fitness(fitness)
 {
+	m_nbStablePeople = m_nbPeople;
     m_nbGenByPeople=fitness->get_nbGene();
     m_people.resize(peopleLen);
     m_geneCopy.resize(m_nbGenByPeople);
@@ -11,8 +12,8 @@ GeneticReal::GeneticReal(Fitness *fitness, int nbPeople, int peopleLen):AbsGenet
     for(int i=0; i<m_people.size(); i++){m_people[i]=new People(m_fitness, m_nbGenByPeople, 2);}
     for(int i=0; i<m_nbPeople; i++){m_people[i]->randGenome();}
     //m_sort=(fitness->get_sortInvert()?new SortInvert():new Sort());
-    m_nbCrossing=m_nbStablePeople / 8;
-    m_nbMutate=m_nbStablePeople / 1.5;
+    m_nbCrossing=m_nbStablePeople / 3;
+    m_nbMutate=m_nbStablePeople / 2.0;
 }
 
 GeneticReal::~GeneticReal()
@@ -31,10 +32,9 @@ void GeneticReal::nextGen(void)
     
     m_generation++;
     for(int i=0; i<m_nbCrossing && crossing()!=-1; i++){;}
-    m_sort->sort(m_people, m_nbPeople);
     for(int i=0; i<m_nbMutate && mutate()!=-1; i++){;}
-    //m_sort->sort(m_people, m_nbPeople);
-    elitistSort();
+    //elitistSort();
+	sigma_kill();
     m_nbPeople=m_nbStablePeople;
 }
 
@@ -78,12 +78,13 @@ int GeneticReal::mutate(void)
     int p=wheel_sigma();
     if(m_nbPeople+1>=m_people.size())
         return -1;
-    m_people[p]->mutate();
+    //m_people[p]->mutate();
     //m_people[m_nbPeople]->copyGenome(m_people[p]);
-    m_people[p]->set_generation(m_generation);
+    //m_people[m_nbPeople]->set_generation(m_generation);
+    //m_people[m_nbPeople]->mutate();
     m_people[p]->mutate();
-    //m_people[m_nbPeople]->evaluate();
-    m_nbPeople++;
+    m_people[p]->mutate();
+	//m_nbPeople++;
     return 0;
 }
 
@@ -97,6 +98,18 @@ void GeneticReal::elitistSort()
         m_people[i]=temp;
     }
     m_nbPeople=m_nbStablePeople;
+}
+
+void GeneticReal::sigma_kill()
+{
+	int	kill;
+
+	while (m_nbPeople > m_nbStablePeople)
+	{
+		kill = m_nbStablePeople - wheel_sigma();
+		m_people[kill] = m_people[m_nbPeople - 1];
+		m_nbPeople--;
+	}
 }
 
 void GeneticReal::parentSelect(void)

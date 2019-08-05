@@ -12,17 +12,17 @@ class GeneticReal: public AbsGenetic
         int get_bestScore(){return m_people[0]->get_score();}
         std::vector<double>& get_bestGene(){return m_people[0]->get_gene();}
         
-        void nextGen();
-        int crossing();
-        int mutate();
-        void parentSelect();
-        void elitistSort();
+        void	nextGen();
+        int		crossing();
+        int		mutate();
+        void	parentSelect();
+        void	elitistSort();
+		void	sigma_kill();
 
 
     protected:
         std::vector<People*> m_people;
         Fitness *m_fitness;
-        int m_nbStablePeople;
         int m_nbCrossing, m_nbMutate;
         int m_nbGenByPeople;
         

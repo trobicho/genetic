@@ -2,11 +2,11 @@
 
 int AbsGenetic::wheel_sigma(void)//class Selector
 {
-    int r, i, min=1, max=m_nbPeople, n=randMinMax(1, sigma(m_nbPeople));
-    if(n>sigma(m_nbPeople/2))
-        min=m_nbPeople/2;
+    int r, i, min=1, max=m_nbStablePeople, n=randMinMax(1, sigma(m_nbStablePeople));
+    if(n>sigma(m_nbStablePeople/2))
+        min=m_nbStablePeople/2;
     else
-        max=m_nbPeople/2;
+        max=m_nbStablePeople/2;
     for(i=min; i<max; i++)
     {
         if(n>sigma(i))
@@ -18,7 +18,7 @@ int AbsGenetic::wheel_sigma(void)//class Selector
         r=min;
     else
         r=max;
-    return (m_nbPeople-r);
+    return (m_nbStablePeople-r);
 }
 
 int AbsGenetic::sigma(int n)//class Selector ou Calcul

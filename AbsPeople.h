@@ -18,6 +18,6 @@ class AbsPeople
     protected:
         std::vector<T> m_gene;
         int m_nbGene;
-        int m_score;
+        int m_score = 0;
         int m_generation;
 };

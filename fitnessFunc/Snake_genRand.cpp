@@ -2,7 +2,7 @@
 
 Snake_genRand::Snake_genRand(s_vec2i max): Snake_new(max, false, 3, 3)
 {
-    m_activFoodGen=0;
+    m_activFoodGen=100;
     m_appleVec.resize(1000);
 }
 
@@ -19,6 +19,7 @@ int Snake_genRand::evaluate(std::vector<double> &gene, int generation)
 		}
     }
     evaluate(gene);
+	return m_score;
 }
 
 int Snake_genRand::evaluate(std::vector<double> &gene)
@@ -88,7 +89,7 @@ void Snake_genRand::step()
         m_bEat=false;
         m_score+=m_applePoint-m_moveNoEat/10;
         m_moveNoEat=0;
-        add_len(5);
+        add_len(1);
         nextApple();
     }
     else if(m_moveNoEat>(m_starving+m_snake.len))
