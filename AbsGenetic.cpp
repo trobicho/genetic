@@ -2,7 +2,7 @@
 
 int AbsGenetic::wheel_sigma(void)//class Selector
 {
-    int r, i, min=1, max=m_nbStablePeople, n=randMinMax(1, sigma(m_nbStablePeople));
+    int r, i, min=0, max=m_nbStablePeople, n=randMinMax(1, sigma(m_nbStablePeople));
     if(n>sigma(m_nbStablePeople/2))
         min=m_nbStablePeople/2;
     else

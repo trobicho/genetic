@@ -2,7 +2,7 @@
 
 Snake_genRand::Snake_genRand(s_vec2i max): Snake_new(max, false, 3, 3)
 {
-    m_activFoodGen=100;
+    m_activFoodGen=0;
     m_appleVec.resize(1000);
 }
 

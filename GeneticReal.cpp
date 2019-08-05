@@ -12,8 +12,8 @@ GeneticReal::GeneticReal(Fitness *fitness, int nbPeople, int peopleLen):AbsGenet
     for(int i=0; i<m_people.size(); i++){m_people[i]=new People(m_fitness, m_nbGenByPeople, 2);}
     for(int i=0; i<m_nbPeople; i++){m_people[i]->randGenome();}
     //m_sort=(fitness->get_sortInvert()?new SortInvert():new Sort());
-    m_nbCrossing=m_nbStablePeople / 3;
-    m_nbMutate=m_nbStablePeople / 2.0;
+    m_nbCrossing=m_nbStablePeople / 5;
+    m_nbMutate=m_nbStablePeople / 5;
 }
 
 GeneticReal::~GeneticReal()
@@ -35,6 +35,7 @@ void GeneticReal::nextGen(void)
     for(int i=0; i<m_nbMutate && mutate()!=-1; i++){;}
     //elitistSort();
 	sigma_kill();
+    m_sort->sort(m_people, m_nbPeople);
     m_nbPeople=m_nbStablePeople;
 }
 
@@ -83,14 +84,14 @@ int GeneticReal::mutate(void)
     //m_people[m_nbPeople]->set_generation(m_generation);
     //m_people[m_nbPeople]->mutate();
     m_people[p]->mutate();
-    m_people[p]->mutate();
 	//m_nbPeople++;
     return 0;
 }
 
 void GeneticReal::elitistSort()
 {
-    People *temp;
+    People	*temp;
+
     for(int i=m_nbStablePeople, p=m_nbStablePeople - 1; i<m_nbPeople; i++, p--)
     {
         temp=m_people[p];
@@ -102,12 +103,15 @@ void GeneticReal::elitistSort()
 
 void GeneticReal::sigma_kill()
 {
-	int	kill;
+	int		kill;
+    People	*temp;
 
 	while (m_nbPeople > m_nbStablePeople)
 	{
 		kill = m_nbStablePeople - wheel_sigma();
+        temp = m_people[kill];
 		m_people[kill] = m_people[m_nbPeople - 1];
+		m_people[m_nbPeople - 1] = temp;
 		m_nbPeople--;
 	}
 }

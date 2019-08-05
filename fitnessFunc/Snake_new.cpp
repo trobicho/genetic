@@ -9,18 +9,18 @@ Snake_new::Snake_new(s_vec2i max, bool binaryNet, int nb_direction, int nbOutPer
         addLayerFront(Layer(1));
     else
         addLayerFront(Layer(3));
-	addLayerFront(Layer(5));
+	addLayerFront(Layer(9));
     m_nbWeight=0;
     NeuralNet::init();
     std::list<Layer>::iterator it=m_layer.begin();
-	it->set_kFactor(60.0);
+	it->set_kFactor(70.0);
 	it->set_bias(30);
 	m_nbWeight += it->get_nbNeuronWeight() * it->get_nbNeuron();
 	it++;
     for(; it!=m_layer.end(); it++)
     {
         m_nbWeight += it->get_nbNeuronWeight() * it->get_nbNeuron();
-        it->set_kFactor(15.0);
+        it->set_kFactor(25.0);
         it->set_bias(0);
     }
 	it--;
